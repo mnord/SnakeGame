@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace SnakeGame
 {
-    internal class Position
+    internal class Position // Positions-klassen som används av det mesta
     {
         public int X { get; set; }
         public int Y { get; set; }
 
-        public Position ()
+        public Position (int x, int y)
         {
-
+           this.X = x;
+           this.Y = y;
         }
     }
 }

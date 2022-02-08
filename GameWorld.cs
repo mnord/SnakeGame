@@ -6,7 +6,6 @@ namespace SnakeGame
 {
     class GameWorld
     {
-        // public int Height { get; set; }
         public int Height { get; }
         public int Width { get; }
         public int Score { get; set; }
@@ -14,7 +13,7 @@ namespace SnakeGame
         public List<GameObject> gameObjects = new List<GameObject>();
         
 
-        public GameWorld(int w, int h)
+        public GameWorld(int w, int h) // Skapa en värld, storlek som input
         {
             Height = h;
             Width = w;
@@ -26,40 +25,59 @@ namespace SnakeGame
         {
             // TODO
             
-            foreach (var gameobject in gameObjects.ToList())
+            foreach (var gameobject in gameObjects.ToList()) // Alla GameObject i listan gås igenom, deras Update() anropas. 
             {
-                gameobject.Update();
-        
-                if (gameobject is Player)
-                {
-                    foreach (var obj in gameObjects.ToList())
-                    {
+                gameobject.Update(); // Alla gameobjects updates.
 
-                        if (obj is Food)
-                        {
-                            if(gameobject.position.X == obj.position.X && gameobject.position.Y == obj.position.Y)
-                            {
-                                if ((obj as Food).color == "green")
-                                {
-                                    Score--;
-                                    gameObjects.Remove(obj);
-                                    Food badfood = new Food("green");
-                                    gameObjects.Add(badfood);
-                                }
-                                else
-                                {
-                                    Score++;
-                                    gameObjects.Remove(obj);
-                                    Food food = new Food("white");
-                                    gameObjects.Add(food);
-                                }
-                            }
-                        } 
-                        
-                    }
-                } 
-
+                CheckPositionFood(gameobject);
             }
         }
+
+        public void UpdateHard()
+        {
+            foreach (var gameobject in gameObjects.ToList()) // Alla GameObject i listan gås igenom, deras UpdateHard() anropas. 
+            {
+                gameobject.UpdateHard(); // Alla gameobjects updates.
+
+                CheckPositionFood(gameobject);
+            }
+        }
+
+        public void CheckPositionFood(GameObject objectItem)
+        {
+            if (objectItem is Player)
+            {
+                foreach (var obj in gameObjects.ToList())
+                {
+
+                    if (obj is Food)
+                    {
+                        if (objectItem.position.X == obj.position.X && objectItem.position.Y == obj.position.Y) // Jämför positionerna
+                        {
+                            if ((obj as Food).color == "green") // Spelaren åt en "green" aka dålig mat
+                            {
+                                Score--;                        // Minuspoäng
+                                gameObjects.Remove(obj);        // Maten som åts försvinner ur listan
+                                (objectItem as Player).snakeBody.RemoveAt(0); //Ormen blir mindre
+                                Food badfood = new Food("green"); // Och en ny skapas och läggs till
+                                gameObjects.Add(badfood);
+
+                            }
+                            else
+                            {
+                                Score++;                        // Pluspoäng, spelaren åt dvs en "white" aka bra mat som försvinner ur listan
+                                gameObjects.Remove(obj);
+                                (objectItem as Player).snakeBody.Add(new Position(objectItem.position.X, objectItem.position.Y)); // Ormen växer
+                                Food food = new Food("white"); // Ny mat för att ersätta det som försvann
+                                gameObjects.Add(food);
+                                Food greenFood = new Food("green"); // En ny dålig mat också, för svårighetsgraden
+                                gameObjects.Add(greenFood);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

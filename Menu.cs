@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace SnakeGame
 {
-    internal class Menu
+    internal class Menu // Egen klass för menyn, fungerar med piltangenter upp eller ner + enter
     {
         private int SelectedIndex;
         private string[] Options;
         private string Prompt;
 
+        //Tar in en sträng och en array 
         public Menu(string prompt, string[] options)
         {
             Prompt = prompt;
@@ -19,9 +20,11 @@ namespace SnakeGame
             SelectedIndex = 0;
         }
 
+        //Skriver ut text och menyval
         private void DisplayOptions()
         {
             Console.WriteLine(Prompt);   
+        //Går igenom array med menyval, ändrar färg och skriver ut
             for (int i = 0; i < Options.Length; i++)
             {
                 string currentOption = Options[i];
@@ -44,6 +47,7 @@ namespace SnakeGame
             Console.ResetColor();
         }
 
+        //Kollar vilken tangent som trycks och returnerar en index
         public int Run()
         {
             ConsoleKey keyPressed;
@@ -71,9 +75,7 @@ namespace SnakeGame
                     {
                         SelectedIndex = 0;
                     }
-
                 }
-
             } while (keyPressed != ConsoleKey.Enter);
             return SelectedIndex;
         }
